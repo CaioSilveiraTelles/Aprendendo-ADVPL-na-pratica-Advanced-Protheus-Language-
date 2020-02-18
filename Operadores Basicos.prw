@@ -9,4 +9,22 @@ user function Operadores()
     alert(nNum - nNum2)
     alert(nNum * nNum2)
     alert(nNum / nNum2)
-    alert(nNum % nNum2) //Resto da Divisao (Modulo)//
+    alert(nNum % nNum2) //Resto da Divisao //
+
+    //Operadores relacionais//
+    alert(nNum < nNum2)
+    alert(nNum > nNum2)
+    alert(nNum = nNum2) //Comparar igual Diferente de outras linguagens//
+    alert(nNum == nNum2) //Exatamente igual//
+    alert(nNum <= nNum2)
+    alert(nNum >= nNum2)
+    alert(nNum != nNum2)    //Diferente//
+
+    //Operadores de atribuição//
+    //nNum1:=10
+    //nNum1 +=nNum2
+    //nNum1  -= nNum2
+    //nNum1  *= nNum2
+    //nNum1  /= nNum2
+
+return 
