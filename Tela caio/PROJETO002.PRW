@@ -43,7 +43,7 @@ User Function MyFunction(cAlias,nREG,nOpcao)
   local Bob
   local bRead
 
-
+//VARIAVEIS QUE ARMAZENAM AS INFOS DOS GETS DAS TELAS
   private dDate := CTOD("")
   private cetBairro := space(30)
   private cetCep := space(8)
@@ -55,10 +55,12 @@ User Function MyFunction(cAlias,nREG,nOpcao)
   private cetEnd :=space(60)
   private cMultiGe1 := space(120)
   private nSTADOS := 1
+  private nenuSexo := 1
 
-
+//BREAD VARIAVEL QUE BLOQUEIA A EDIÇÃO DOS GETS , PARA A OPÇÃO VISUALIZAR E PESQUISAR
   bRead:={||nOpcao ==3 .OR. nOpcao==4}
 
+//CHAMADA DE FUNÇOES DETERMINADA PELA ESCOLHA DO BOTAO DO USUARIO
   if nOpcao != 3
     u_Carregar()
   endif
@@ -66,6 +68,7 @@ User Function MyFunction(cAlias,nREG,nOpcao)
     u_Delet01()
   endif
 
+//CRIAÇÃO DA TELA PRINCIPAL
   DEFINE MSDIALOG oDlg TITLE "CADASTRAMENTO GERAL FUNCIONARIO" FROM -143, 000  TO 500, 500 COLORS 0, 16777215 PIXEL
   @ 023, 006 SAY cCpf PROMPT "DIGITE SEU CPF" SIZE 047, 007 OF oDlg COLORS 0, 16777215 PIXEL
   @ 033, 005 MSGET oGetCPF VAR cetCPF SIZE 050, 010  Picture "@R 999.999.999-99" Valid ValidaCpf(cetCPF) WHEN bRead OF oDlg COLORS 0, 16777215 PIXEL
@@ -97,21 +100,21 @@ User Function MyFunction(cAlias,nREG,nOpcao)
   @ 160, 135 SAY BOb PROMPT "OBSERVACOES:" SIZE 090, 044 OF oDlg COLORS 0, 16777215 PIXEL
   @ 167, 135 GET oMultiGe1 VAR cMultiGe1 OF oDlg MULTILINE SIZE 092, 044  WHEN bRead COLORS 0, 16777215 HSCROLL PIXEL
 
+   oDlg:lEscClose := .F.
 
-
-  oDlg:lEscClose := .F.
-
+//CASO A OPÇÃO SEJA ALTERAR OU INCLUIR , OS BOTOES FICARAM DISPONIVEIS
   if (nOpcao == 3) .or. (nOpcao == 4)
-    bAction1 := {||U_SZ1MOD(cetCPF,dDate ,cetNome,cetCidade ,cetBairro, nSTADOS,nenuSexo,cetEnd,getName,cetTelefone,cetCep,nRadMenu2 ,cMultiGe1,)}
-    bAction2 := {||CancelarRR()}
-    salvar:= tButton():new( 290,05,"SALVAR" , oDlg,bAction1, 037, 012 ,,,,.T.)
-    cancelar:= tButton():new(292,200,"CANCELAR" ,oDLg,bAction2 , 037, 012 ,,,,.T.)
-  endif
-
-
+        bAction1 := {||U_SZ1MOD(cetCPF,dDate ,cetNome,cetCidade ,cetBairro, nSTADOS,nenuSexo,cetEnd,getName,cetTelefone,cetCep,nRadMenu2 ,cMultiGe1,)}
+        bAction2 := {||CancelarRR()}
+        salvar:= tButton():new( 290,05,"SALVAR" , oDlg,bAction1, 037, 012 ,,,,.T.)
+        cancelar:= tButton():new(292,200,"CANCELAR" ,oDLg,bAction2 , 037, 012 ,,,,.T.)
+  ENDIF
+  
   ACTIVATE MSDIALOG oDlg CENTERED
 RETURN
 
+
+//FUNÇÃO QUE FECHA A TELA , CASO O BUTTON CANCELAR SEJA ACIONADO
 static function CancelarRR()
   if MSGYESNO( "Deseja cancelar?")
     Odlg:End()
@@ -119,6 +122,7 @@ static function CancelarRR()
 
 Return
 
+//FUNÇÃO QUE VALIDA O CPF E CASO EXISTA TRÁS AS INFOS DO BANCO PARA A TELA
 static Function ValidaCpf(cCpf)
   if u_BuscaCpf(cCpf)
     dDate         :=  SZ1->Z1_DATA
@@ -137,7 +141,7 @@ static Function ValidaCpf(cCpf)
 
 return .T.
 
-
+//função que busca um CPF DIGITADO , NO BANCO DE DADOS
 user function BuscaCPF(cCpf)
   local lRet := .F.
 
@@ -148,6 +152,7 @@ user function BuscaCPF(cCpf)
 
 return lRet
 
+//FUNÇÃO QUE ARMAZENA INFOS DO CEP VIA WEB NOS CAMPOS DA TELA
 static function CheckCep(cetCep)
   local aInfos := {}
   aInfos:=u_GETCEP(cetCep)
@@ -158,37 +163,42 @@ static function CheckCep(cetCep)
   nSTADOS:=aInfos[4]
 return
 
+
+//FUNÇÃO QUE CARREGA OS DADOS DO BANCO PARA EXIBIR NA TELA
 user function Carregar()
-  dDate         :=  SZ1->Z1_DATA
-  cetNome       :=  SZ1->Z1_NOME
-  cetCidade     :=  SZ1->Z1_CIDADE
-  cetBairro     :=  SZ1->Z1_BAIRRO
-  nSTADOS       :=  SZ1->Z1_ESTADO
-  nenuSexo      :=  SZ1->Z1_SEXO
-  cetEnd        :=  SZ1->Z1_END
-  getName       :=  SZ1->Z1_EMAIL
-  cetCep        :=  SZ1->Z1_CEP
-  cetTelefone   :=  SZ1->Z1_TEL
-  nRadMenu2     :=  SZ1->Z1_ATIVO
-  cMultiGe1     :=  SZ1->Z1_OBS
-  cetCPF        :=  SZ1->Z1_CPF
+    
+        dDate         :=  SZ1->Z1_DATA
+        cetNome       :=  SZ1->Z1_NOME
+        cetCidade     :=  SZ1->Z1_CIDADE
+        cetBairro     :=  SZ1->Z1_BAIRRO
+        nSTADOS       :=  SZ1->Z1_ESTADO
+        nenuSexo      :=  SZ1->Z1_SEXO
+        cetEnd        :=  SZ1->Z1_END
+        getName       :=  SZ1->Z1_EMAIL
+        cetCep        :=  SZ1->Z1_CEP
+        cetTelefone   :=  SZ1->Z1_TEL
+        nRadMenu2     :=  SZ1->Z1_ATIVO
+        cMultiGe1     :=  SZ1->Z1_OBS
+        cetCPF        :=  SZ1->Z1_CPF
+  
 
 return
 
-user function Delet01()
 
+//FUNÇÃO QUE DELETA INFOS DO BANCO
+user function Delet01()
 
 //SELECIONAMOS A TABEA/ÁREA
   dbSelectArea("SZ1")
   dbSetOrder(1)
 
-  if !(dbSeek(xFilial("SZ1")+_CPF))
+  if !(dbSeek(xFilial("SZ1")+Z1_CPF))
     Alert("Este registro não existe,"+Chr(13)+Chr(10)+"portanto não pode ser DELETADO!","ATENÇÃO!")
     dbCloseArea("SZ1")
   else
 //GRAVA DELEÇÃO NO BANCO DE DADOS	
     IF MsgYesNo("Tem certeza que quer DELETAR o registro?", "ATENÇÃO" )
-      dbSelectArea("SZ11")
+      dbSelectArea("SZ1")
       RecLock("SZ1",.F.)
 
       dbDelete() //função responsável pela deleção lógica
@@ -202,4 +212,3 @@ user function Delet01()
 
   dbCloseArea("SZ1")
 return
-
